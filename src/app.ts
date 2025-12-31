@@ -1,9 +1,12 @@
-import express from "express";
-import loadRoutes from "./routes";
+import express, { Application } from "express";
+import { registerRoutes } from "./routes";
 
-const app = express();
-app.use(express.json());
-loadRoutes(app)
+export function createApp(): Application {
+  const app = express();
 
+  app.use(express.json());
 
-export default app;
+  registerRoutes(app);
+
+  return app;
+}

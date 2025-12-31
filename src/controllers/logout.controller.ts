@@ -1,21 +1,16 @@
 import { Request, Response } from "express";
-import { userRepository } from "../repositories/user.repo";
+import { logout } from "../services/auth.service";
 
 export function logoutController(req: Request, res: Response) {
   try {
-   
-    const userId = (req as any).user.userId;
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token)
+      return res.status(401).json({ message: "No token provided" });
 
-    const deleted = userRepository.deleteById(userId);
+    logout(token);
 
-    if (!deleted) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    return res.status(200).json({
-      message: "Logout successful, user deleted",
-    });
-  } catch (error) {
-    return res.status(500).json({ message: "Logout failed" });
+    return res.json({ message: "Logout successful" });
+  } catch (err: any) {
+    return res.status(400).json({ message: err.message });
   }
 }

@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import { register } from "../services/auth.service";
+
 export function registerController(req: Request, res: Response) {
   try {
-    const { email, password } = req.body;
-    res.json(register(email, password));
-  } catch (e: any) {
-    res.status(400).json({ message: e.message });
+    const result = register(req.body);
+    return res.json(result);
+  } catch (err: any) {
+    return res.status(400).json({ message: err.message });
   }
 }

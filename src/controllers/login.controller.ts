@@ -3,10 +3,9 @@ import { login } from "../services/auth.service";
 
 export function loginController(req: Request, res: Response) {
   try {
-    const { email, password } = req.body;
-    const result = login(email, password);
+    const result = login( req.body );
     res.json(result);
   } catch (e: any) {
-    res.status(400).json({ message: e.message });
+    return res.status(400).json({ message: e.message });
   }
 }

@@ -1,48 +1,20 @@
-
-import { Request, Response, NextFunction } from "express";
 import { validateBody } from "./validateBody";
 import { emailRule, passwordRule } from "./auth.rules";
 
-export function validateRegister(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    validateBody(req.body);
+export function validateRegisterInput(body: unknown) {
+  validateBody(body);
 
-    const { email, password } = req.body;
+  const { email, password } = body as any;
 
-    emailRule(email);
-    passwordRule(password, 6);
-
-    next();
-  } catch (err: any) {
-    return res.status(400).json({
-      message: "Validation failed",
-      error: err.message,
-    });
-  }
+  emailRule(email);
+  passwordRule(password, 6);
 }
 
-export function validateLogin(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    validateBody(req.body);
+export function validateLoginInput(body: unknown) {
+  validateBody(body);
 
-    const { email, password } = req.body;
+  const { email, password } = body as any;
 
-    emailRule(email);
-    passwordRule(password, 1);
-
-    next();
-  } catch (err: any) {
-    return res.status(400).json({
-      message: "Validation failed",
-      error: err.message,
-    });
-  }
+  emailRule(email);
+  passwordRule(password, 1);
 }

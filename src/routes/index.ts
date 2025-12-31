@@ -1,25 +1,16 @@
-import { Express } from "express";
-import fs from "fs";
-import path from "path";
+import { Application } from "express";
+import authRoutes from "./auth.routes";
+import { RouteConfig } from "../entities/User";
 
-export default async function loadRoutes(app: Express) {
-  const routesPath = __dirname;
+const routes: RouteConfig[] = [
+  {
+    path: "/auth",
+    router: authRoutes,
+  },
+];
 
-  const files = fs.readdirSync(routesPath);
-
-  for (const file of files) {
-    if (!file.match(/\.routes\.(ts|js)$/)) continue;
-
-    const routeName = file.replace(/\.routes\.(ts|js)$/, "");
-
-    const routeModule = await import(path.join(routesPath, file));
-    const route = routeModule.default;
-
-    if (!route) {
-      throw new Error(`Route ${file} must export default router`);
-    }
-
-    app.use(`/${routeName}`, route);
-    console.log(`Route loaded: /${routeName}`);
+export function registerRoutes(app: Application) {
+  for (const route of routes) {
+    app.use(route.path, route.router);
   }
 }
